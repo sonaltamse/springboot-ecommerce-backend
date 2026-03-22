@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductServiceImpl implements ProductService{
@@ -51,5 +50,31 @@ public class ProductServiceImpl implements ProductService{
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
         return productResponse;
+    }
+
+    @Override
+    public ProductResponse searchProductByKeyword(String keyword) {
+        List<Product> products = productRepository.findByProductNameLikeIgnoreCase('%'+keyword+'%');
+        List<ProductDTO> productDTOS = products.stream().map(product -> modelMapper.map(product,ProductDTO.class)).toList();
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setContent(productDTOS);
+        return productResponse;
+    }
+
+    @Override
+    public ProductDTO updateProduct(Product product, Long productId) {
+        Product existingProduct = productRepository.findById(productId).orElseThrow(()->new ResourceNotfoundException("Product","productId",productId));
+
+        existingProduct.setProductName(product.getProductName());
+        existingProduct.setDescription(product.getDescription());
+        existingProduct.setQuantity((product.getQuantity()));
+        existingProduct.setDiscount(product.getDiscount());
+        existingProduct.setPrice(product.getPrice());
+        existingProduct.setSpecialPrice((product.getSpecialPrice()));
+
+        Product savedProduct = productRepository.save(existingProduct);
+
+//        return it as a DTO with modelMapper
+        return modelMapper.map(savedProduct, ProductDTO.class);
     }
 }
