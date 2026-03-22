@@ -11,5 +11,5 @@ public class ProductDTO {
     private Long productId;
     private String productName, image;
     private Integer quantity;
-    private double price, discount, specialPrice;
+    private Double price, discount, specialPrice;
 }
