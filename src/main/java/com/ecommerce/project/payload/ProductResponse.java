@@ -11,4 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductResponse {
     private List<ProductDTO> content;
+    private Integer pageNumber, pageSize, totalPages;
+    private Long totalElements;
+    private boolean lastPage;
 }
