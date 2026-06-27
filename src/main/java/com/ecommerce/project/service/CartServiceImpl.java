@@ -1,4 +1,4 @@
-package com.ecommerce.project.controller;
+package com.ecommerce.project.service;
 
 import com.ecommerce.project.exceptions.APIException;
 import com.ecommerce.project.exceptions.ResourceNotfoundException;
@@ -10,7 +10,6 @@ import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.repositories.CartItemRepository;
 import com.ecommerce.project.repositories.CartRepository;
 import com.ecommerce.project.repositories.ProductRepository;
-import com.ecommerce.project.service.CartService;
 import com.ecommerce.project.util.AuthUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +20,10 @@ import java.util.stream.Stream;
 
 @Service
 public class CartServiceImpl implements CartService {
-    
+
     @Autowired
     CartRepository cartRepository;
-    
+
     @Autowired
     AuthUtil authUtil;
 
@@ -73,7 +72,10 @@ public class CartServiceImpl implements CartService {
 
     private Cart createCart() {
         Cart userCart = cartRepository.findCartByEmail(authUtil.loggedInEmail());
-        if(userCart == null) return userCart;
+
+        if (userCart != null) {
+            return userCart;
+        }
 
         Cart cart = new Cart();
         cart.setTotalPrice(0.00);
