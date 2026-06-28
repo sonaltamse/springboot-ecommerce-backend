@@ -2,6 +2,10 @@ package com.ecommerce.project.service;
 
 import com.ecommerce.project.payload.CartDTO;
 
+import java.util.List;
+
 public interface CartService {
     public CartDTO addPRoductToCart(Long productId, Integer quantity);
+
+    List<CartDTO> getAllCarts();
 }
