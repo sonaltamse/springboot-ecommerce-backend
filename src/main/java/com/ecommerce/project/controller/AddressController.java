@@ -41,4 +41,11 @@ public class AddressController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/users/addresses")
+    public ResponseEntity<List<AddressDTO>> getUserAddresses(){
+        User user = authUtil.loggedInUser();
+        List<AddressDTO> addressDTOList = addressService.getUserAddresses(user);
+        return ResponseEntity.ok(addressDTOList);
+    }
 }
