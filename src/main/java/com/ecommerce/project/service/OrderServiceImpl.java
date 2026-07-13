@@ -46,7 +46,8 @@ public class OrderServiceImpl implements OrderService{
     public OrderDTO placeOrder(String emailId, Long addressId, String paymentMethod, String pgName, String pgPaymentId, String pgStatus, String pgResponseMessage) {
         //getting user cart
         Cart cart = cartRepository.findCartByEmail(emailId);
-        if(cart!=null){
+        // if no cart found for the user, throw
+        if(cart==null){
             throw new ResourceNotfoundException("Cart","email",emailId);
         }
         Address address = addressRepository.findById(addressId).orElseThrow(()->new ResourceNotfoundException("Address","id",addressId));
@@ -60,7 +61,8 @@ public class OrderServiceImpl implements OrderService{
         order.setOrderStatus("Order Accepted !");
         order.setAddress(address);
 
-        Payment payment = new Payment(paymentMethod, pgName,pgPaymentId,pgStatus,pgResponseMessage);
+        // Payment constructor expects: (paymentMethod, pgPaymentId, pgStatus, pgResponseMessage, pgName)
+        Payment payment = new Payment(paymentMethod, pgPaymentId, pgStatus, pgResponseMessage, pgName);
         payment.setOrder(order);
         payment =  paymentRepository.save(payment);
         order.setPayment(payment);

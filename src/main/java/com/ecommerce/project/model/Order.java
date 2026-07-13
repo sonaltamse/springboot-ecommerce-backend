@@ -21,7 +21,7 @@ public class Order {
     private Long orderId;
 
     @Email
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String email;
 
     @OneToMany(mappedBy = "order", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
