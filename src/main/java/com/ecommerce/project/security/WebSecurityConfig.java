@@ -70,7 +70,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/swagger-ui/**").permitAll()
 //                        .requestMatchers("/api/public/**").permitAll()
 //                        .requestMatchers("/api/admin/**").permitAll()
-                        .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll().requestMatchers("/swagger-ui/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
