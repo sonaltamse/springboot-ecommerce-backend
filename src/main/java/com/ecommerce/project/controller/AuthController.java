@@ -11,6 +11,10 @@ import com.ecommerce.project.security.request.SignupRequest;
 import com.ecommerce.project.security.response.MessageResponse;
 import com.ecommerce.project.security.response.UserInfoResponse;
 import com.ecommerce.project.security.services.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -47,6 +51,12 @@ public class AuthController {
     @Autowired
     RoleRepository roleRepository;
 
+    @Tag(name="Authentication APIs", description = "APIs for user authentication")
+    @Operation(description = "Sign in a user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User signed in successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access")
+    })
     @PostMapping("/signin")
     public ResponseEntity<Object> authenticateUser(@RequestBody LoginRequest loginRequest){
         Authentication authentication;
@@ -74,6 +84,12 @@ public class AuthController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(response);
     }
 
+    @Tag(name="Authentication APIs", description = "APIs for user authentication")
+    @Operation(description = "Register a new user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User registered successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request - username or email already exists")
+    })
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest){
         if(userRepository.existsByUserName(signupRequest.getUserName())){
@@ -125,6 +141,12 @@ public class AuthController {
         return "NULL";
     }
 
+    @Tag(name="Authentication APIs", description = "APIs for user authentication")
+    @Operation(description = "Get details of the authenticated user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User details retrieved successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized access")
+    })
     @GetMapping("/user")
     public ResponseEntity<?> getUserDetails(Authentication authentication){
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -134,6 +156,11 @@ public class AuthController {
         return ResponseEntity.ok().body(response);
     }
 
+    @Tag(name="Authentication APIs", description = "APIs for user authentication")
+    @Operation(description = "Sign out the authenticated user")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "User signed out successfully")
+    })
     @PostMapping("/signout")
     public ResponseEntity<?> signoutUser(){
         ResponseCookie cookie = jwtUtils.getCleanJwtCookie();
